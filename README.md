@@ -6,70 +6,260 @@
 <title>EcoFishing 🎣</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;user-select:none;-webkit-tap-highlight-color:transparent;}
-html,body{background:#111;display:flex;align-items:flex-start;justify-content:center;min-height:100vh;font-family:system-ui,sans-serif;}
-#game{width:100%;max-width:680px;position:relative;overflow:hidden;border-radius:0;background:#1a4a2e;}
-@media(min-width:700px){#game{border-radius:16px;margin:20px auto;}}
-#hud{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(0,0,0,0.45);color:#fff;font-size:13px;font-weight:600;gap:8px;}
-#hud .score{font-size:18px;font-weight:800;color:#ffe066;}
-#hud .timer{font-size:16px;font-weight:800;color:#ff6b6b;}
-#clean-bar-wrap{flex:1;background:rgba(255,255,255,0.18);border-radius:8px;height:13px;overflow:hidden;}
+html,body{
+  background:#0a1a0f;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  min-height:100vh;
+  min-height:100dvh;
+  font-family:system-ui,sans-serif;
+  overflow-x:hidden;
+}
+#game{
+  width:100%;
+  max-width:680px;
+  position:relative;
+  background:#1a4a2e;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  min-height:100dvh;
+}
+@media(min-width:700px){
+  #game{
+    border-radius:16px;
+    margin:20px auto;
+    min-height:0;
+    box-shadow:0 8px 40px rgba(0,0,0,0.6);
+  }
+  html,body{align-items:center;}
+}
+
+/* HUD */
+#hud{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:8px 10px;
+  background:rgba(0,0,0,0.5);
+  color:#fff;
+  font-weight:600;
+  gap:6px;
+  flex-shrink:0;
+  min-height:48px;
+}
+#hud .score{font-size:clamp(15px,4vw,20px);font-weight:800;color:#ffe066;}
+#hud .timer{font-size:clamp(14px,3.5vw,18px);font-weight:800;color:#ff6b6b;}
+#hud .hud-label{font-size:clamp(8px,2vw,10px);opacity:0.7;}
+#clean-bar-wrap{flex:1;background:rgba(255,255,255,0.18);border-radius:8px;height:11px;overflow:hidden;min-width:0;}
 #clean-bar{height:100%;background:#4caf50;border-radius:8px;transition:width 0.5s;}
-#river{position:relative;width:100%;height:268px;overflow:hidden;cursor:crosshair;touch-action:none;}
-canvas#gc{position:absolute;inset:0;z-index:2;}
-#fisher-wrap{position:absolute;bottom:0;left:50%;transform:translateX(-50%);z-index:10;pointer-events:none;}
-#fisher-wrap svg{width:70px;height:90px;}
-#line-svg{position:absolute;inset:0;z-index:9;pointer-events:none;}
-#discard-panel{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.85);z-index:50;align-items:center;justify-content:center;flex-direction:column;gap:10px;}
+
+/* RIVER */
+#river{
+  position:relative;
+  width:100%;
+  flex:1 1 auto;
+  overflow:hidden;
+  cursor:crosshair;
+  touch-action:none;
+  min-height:120px;
+}
+canvas#gc{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:2;
+  display:block;
+}
+#fisher-wrap{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:10;
+  pointer-events:none;
+}
+#fisher-wrap svg{
+  width:clamp(50px,10vw,70px);
+  height:auto;
+}
+#line-svg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:9;
+  pointer-events:none;
+}
+
+/* DISCARD PANEL */
+#discard-panel{
+  display:none;
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.88);
+  z-index:50;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:8px;
+  padding:12px;
+}
 #discard-panel.show{display:flex;}
-#discard-panel .dp-icon{font-size:52px;}
-#discard-panel .dp-name{color:#fff;font-size:15px;font-weight:700;}
-#discard-panel .dp-q{color:#ffe066;font-size:13px;}
-#discard-bins{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;padding:0 10px;}
-.dbb{padding:8px 10px;border-radius:10px;border:none;font-size:19px;cursor:pointer;transition:transform 0.15s;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:52px;}
-.dbb span{font-size:9px;font-weight:800;color:#fff;letter-spacing:0.3px;text-align:center;}
-.dbb:hover,.dbb:active{transform:scale(1.12);}
-#msg{position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);font-size:20px;font-weight:800;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,0.9);z-index:60;pointer-events:none;opacity:0;transition:opacity 0.25s;white-space:nowrap;}
+#discard-panel .dp-icon{font-size:clamp(36px,10vw,52px);}
+#discard-panel .dp-name{color:#fff;font-size:clamp(12px,3.5vw,15px);font-weight:700;text-align:center;}
+#discard-panel .dp-q{color:#ffe066;font-size:clamp(11px,3vw,13px);}
+#discard-bins{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;width:100%;max-width:380px;}
+.dbb{
+  padding:7px 8px;
+  border-radius:10px;
+  border:none;
+  font-size:clamp(16px,4.5vw,20px);
+  cursor:pointer;
+  transition:transform 0.15s;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+  flex:1 1 calc(33% - 6px);
+  min-width:60px;
+  max-width:90px;
+}
+.dbb span{font-size:clamp(7px,1.8vw,9px);font-weight:800;color:#fff;letter-spacing:0.3px;text-align:center;}
+.dbb:hover,.dbb:active{transform:scale(1.1);}
+
+/* MSG */
+#msg{
+  position:absolute;
+  top:40%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:clamp(14px,4vw,20px);
+  font-weight:800;
+  color:#fff;
+  text-shadow:0 2px 8px rgba(0,0,0,0.9);
+  z-index:60;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 0.25s;
+  white-space:nowrap;
+}
 #msg.show{opacity:1;}
-#overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.9);z-index:80;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center;padding:20px;}
+
+/* OVERLAY */
+#overlay{
+  display:none;
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.92);
+  z-index:80;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:10px;
+  text-align:center;
+  padding:16px 20px;
+  overflow-y:auto;
+}
 #overlay.show{display:flex;}
-#overlay h2{color:#ffe066;font-size:22px;font-weight:800;}
-#overlay p{color:#fff;font-size:14px;line-height:1.6;}
-.big-pct{font-size:64px;font-weight:900;line-height:1;}
-#overlay button{padding:12px 32px;border-radius:12px;background:#4caf50;border:none;color:#fff;font-size:17px;font-weight:800;cursor:pointer;margin-top:6px;-webkit-tap-highlight-color:transparent;}
+#overlay h2{color:#ffe066;font-size:clamp(18px,5vw,22px);font-weight:800;}
+#overlay p{color:#fff;font-size:clamp(11px,3vw,14px);line-height:1.6;max-width:300px;}
+.big-pct{font-size:clamp(48px,15vw,64px);font-weight:900;line-height:1;}
+#overlay button{
+  padding:11px 28px;
+  border-radius:12px;
+  background:#4caf50;
+  border:none;
+  color:#fff;
+  font-size:clamp(14px,4vw,17px);
+  font-weight:800;
+  cursor:pointer;
+  margin-top:4px;
+  -webkit-tap-highlight-color:transparent;
+}
 #overlay button:active{transform:scale(0.97);}
-#bin-area{display:flex;justify-content:space-around;padding:6px 4px;background:rgba(0,0,0,0.5);gap:3px;}
-.bin{flex:1;min-width:0;border-radius:9px;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;transition:transform 0.15s;border:2px solid transparent;}
+
+/* BIN AREA */
+#bin-area{
+  display:flex;
+  justify-content:space-around;
+  padding:5px 3px;
+  background:rgba(0,0,0,0.55);
+  gap:2px;
+  flex-shrink:0;
+}
+.bin{
+  flex:1;
+  min-width:0;
+  border-radius:8px;
+  padding:5px 1px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+  cursor:pointer;
+  transition:transform 0.15s;
+  border:2px solid transparent;
+}
 .bin:hover,.bin:active{transform:translateY(-3px);}
 .bin.correct{animation:cflash 0.4s;}
 .bin.wrong{animation:wshake 0.4s;}
 @keyframes cflash{0%,100%{opacity:1}50%{opacity:0.2}}
 @keyframes wshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-.bin-icon{font-size:20px;}
-.bin-label{font-size:8px;font-weight:800;color:#fff;text-align:center;text-transform:uppercase;letter-spacing:0.4px;line-height:1.2;}
-.bonus-anim{position:absolute;font-size:17px;font-weight:800;text-shadow:0 1px 4px rgba(0,0,0,0.7);z-index:70;pointer-events:none;animation:riseup 1.1s forwards;}
+.bin-icon{font-size:clamp(14px,4.5vw,20px);}
+.bin-label{font-size:clamp(6px,1.8vw,8px);font-weight:800;color:#fff;text-align:center;text-transform:uppercase;letter-spacing:0.3px;line-height:1.2;}
+
+/* BONUS ANIM */
+.bonus-anim{
+  position:absolute;
+  font-size:clamp(13px,3.5vw,17px);
+  font-weight:800;
+  text-shadow:0 1px 4px rgba(0,0,0,0.7);
+  z-index:70;
+  pointer-events:none;
+  animation:riseup 1.1s forwards;
+}
 @keyframes riseup{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-55px)}}
-#hint{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.8);font-size:11px;font-weight:600;z-index:5;pointer-events:none;background:rgba(0,0,0,0.4);padding:3px 10px;border-radius:20px;white-space:nowrap;}
+
+/* HINT */
+#hint{
+  position:absolute;
+  bottom:6px;
+  left:50%;
+  transform:translateX(-50%);
+  color:rgba(255,255,255,0.85);
+  font-size:clamp(9px,2.5vw,11px);
+  font-weight:600;
+  z-index:5;
+  pointer-events:none;
+  background:rgba(0,0,0,0.45);
+  padding:3px 10px;
+  border-radius:20px;
+  white-space:nowrap;
+}
 </style>
 </head>
 <body>
 <div id="game">
   <div id="hud">
     <div>
-      <div style="font-size:10px;opacity:0.7">PONTOS</div>
+      <div class="hud-label">PONTOS</div>
       <div class="score" id="score-display">0</div>
     </div>
-    <div style="flex:1;padding:0 8px;">
-      <div style="font-size:10px;opacity:0.7;margin-bottom:3px;">🌿 LIMPEZA DO RIO</div>
+    <div style="flex:1;padding:0 6px;">
+      <div class="hud-label" style="margin-bottom:3px;">🌿 LIMPEZA DO RIO</div>
       <div id="clean-bar-wrap"><div id="clean-bar" style="width:0%"></div></div>
     </div>
     <div style="text-align:right">
-      <div style="font-size:10px;opacity:0.7">TEMPO</div>
+      <div class="hud-label">TEMPO</div>
       <div class="timer" id="timer-display">3:00</div>
     </div>
   </div>
 
   <div id="river">
-    <canvas id="gc" width="680" height="268"></canvas>
+    <canvas id="gc"></canvas>
     <div id="fisher-wrap">
       <svg viewBox="0 0 70 90">
         <ellipse cx="35" cy="78" rx="22" ry="7" fill="#0d3a50" opacity="0.4"/>
@@ -82,7 +272,7 @@ canvas#gc{position:absolute;inset:0;z-index:2;}
         <circle cx="48" cy="55" r="5" fill="#c8a46e"/>
       </svg>
     </div>
-    <svg id="line-svg" width="100%" height="268" viewBox="0 0 680 268" style="position:absolute;inset:0;z-index:9;pointer-events:none;"></svg>
+    <svg id="line-svg" style="position:absolute;inset:0;z-index:9;pointer-events:none;"></svg>
     <div id="msg"></div>
     <div id="discard-panel">
       <div class="dp-icon" id="dp-icon"></div>
@@ -92,11 +282,11 @@ canvas#gc{position:absolute;inset:0;z-index:2;}
     </div>
     <div id="overlay" class="show">
       <h2>🎣 EcoFishing</h2>
-      <p style="font-size:12px;opacity:0.75;max-width:280px;">
+      <p style="font-size:clamp(10px,2.8vw,12px);opacity:0.75;">
         Dê <b>duplo toque</b> nas manchas escuras na água para pescar!<br>
         Segure o animal para libertá-lo. Recicle o lixo corretamente.
       </p>
-      <div style="font-size:12px;color:#adf;line-height:2;">
+      <div style="font-size:clamp(10px,2.8vw,12px);color:#adf;line-height:2;">
         ♻️ Reciclar certo: <b>+16pts</b> &nbsp;|&nbsp; ❌ Errado: <b>-12pts</b><br>
         🐢 Salvar animal: <b>+40pts</b> &nbsp;|&nbsp; 🎣 Pescar: <b>+8pts</b>
       </div>
@@ -168,7 +358,17 @@ const canvas=document.getElementById('gc');
 const ctx=canvas.getContext('2d');
 const lineSvg=document.getElementById('line-svg');
 const river=document.getElementById('river');
-const RW=680,RH=268;
+
+// Canvas dimensions — always match the actual rendered size
+let RW=0,RH=0;
+
+function resizeCanvas(){
+  RW=river.clientWidth;
+  RH=river.clientHeight;
+  canvas.width=RW;
+  canvas.height=RH;
+  lineSvg.setAttribute('viewBox',`0 0 ${RW} ${RH}`);
+}
 
 let score=0,timeLeft=180,gameRunning=false,casting=false,pendingTrash=null,cleanPct=0;
 let msgTimeout=null,spots=[],animals=[],floatingFish=[],floatingTrash=[];
@@ -181,7 +381,11 @@ function getLevelIdx(p){let i=0;for(let j=0;j<LEVELS.length;j++)if(p>=LEVELS[j].
 
 el('start-btn').onclick=startGame;
 
+// Fisher position (relative — bottom-center)
+function fisherPos(){return{x:RW/2,y:RH-30};}
+
 function startGame(){
+  resizeCanvas();
   el('overlay').classList.remove('show');
   gameRunning=true;score=0;timeLeft=180;cleanPct=0;
   spots=[];animals=[];floatingFish=[];floatingTrash=[];
@@ -210,7 +414,7 @@ function spawnSpots(){
 }
 
 function newSpot(){
-  return{x:rand(60,RW-60),y:rand(45,RH-60),r:rand(22,32),pulse:Math.random()*Math.PI*2,active:true};
+  return{x:rand(60,RW-60),y:rand(45,RH-70),r:rand(22,32),pulse:Math.random()*Math.PI*2,active:true};
 }
 
 function spawnAnimals(){
@@ -221,7 +425,7 @@ function spawnAnimals(){
 
 function addAnimal(){
   const a=ANIMALS[randInt(0,ANIMALS.length-1)];
-  animals.push({...a,x:rand(50,RW-50),y:rand(40,RH-80),holdProgress:0,holding:false,holdInterval:null,freed:false});
+  animals.push({...a,x:rand(50,RW-50),y:rand(40,RH-90),holdProgress:0,holding:false,holdInterval:null,freed:false});
 }
 
 function spawnFloatingTrash(){
@@ -236,7 +440,7 @@ function spawnFloatingTrash(){
 function spawnFloatingFish(){
   floatingFish=[];
   for(let i=0;i<5;i++)
-    floatingFish.push({x:rand(30,RW-30),y:rand(30,RH-50),dir:Math.random()<0.5?1:-1,speed:rand(0.3,0.7),t:Math.random()*Math.PI*2});
+    floatingFish.push({x:rand(30,RW-30),y:rand(30,RH-60),dir:Math.random()<0.5?1:-1,speed:rand(0.3,0.7),t:Math.random()*Math.PI*2});
 }
 
 function loop(){
@@ -328,10 +532,9 @@ function drawFloatingFish(li){
 
 function getCanvasPos(e){
   const rect=canvas.getBoundingClientRect();
-  const scaleX=RW/rect.width,scaleY=RH/rect.height;
   let cx,cy;
-  if(e.touches){cx=(e.touches[0].clientX-rect.left)*scaleX;cy=(e.touches[0].clientY-rect.top)*scaleY;}
-  else{cx=(e.clientX-rect.left)*scaleX;cy=(e.clientY-rect.top)*scaleY;}
+  if(e.touches){cx=e.touches[0].clientX-rect.left;cy=e.touches[0].clientY-rect.top;}
+  else{cx=e.clientX-rect.left;cy=e.clientY-rect.top;}
   return{cx,cy};
 }
 
@@ -390,9 +593,7 @@ function startHold(cx,cy){
 
 function releaseHold(){
   animals.forEach(a=>{
-    if(a.holding&&!a.freed){
-      a.holding=false;a.holdProgress=0;clearInterval(a.holdInterval);
-    }
+    if(a.holding&&!a.freed){a.holding=false;a.holdProgress=0;clearInterval(a.holdInterval);}
   });
 }
 
@@ -411,7 +612,8 @@ function freeAnimal(a){
 
 function animateCast(tx,ty,cb){
   casting=true;
-  const fx=340,fy=240;
+  const fp=fisherPos();
+  const fx=fp.x,fy=fp.y;
   let prog=0;
   lineSvg.innerHTML='';
   const path=document.createElementNS('http://www.w3.org/2000/svg','path');
@@ -463,8 +665,8 @@ function discardItem(chosen){
   el('discard-panel').classList.remove('show');
   const binEl=document.querySelector(`.bin[data-type="${chosen}"]`);
   if(binEl){binEl.classList.add(correct?'correct':'wrong');setTimeout(()=>binEl.classList.remove('correct','wrong'),500);}
-  if(correct){addScore(16);cleanPct=Math.min(100,cleanPct+2);showMsg('+16 ♻️ Correto!','#a5d6a7');spawnBonus('+16 ♻️','#a5d6a7',340,120);}
-  else{addScore(-12);showMsg('-12 ❌ Errado!','#ef9a9a');spawnBonus('-12 ❌','#ef9a9a',340,120);}
+  if(correct){addScore(16);cleanPct=Math.min(100,cleanPct+2);showMsg('+16 ♻️ Correto!','#a5d6a7');spawnBonus('+16 ♻️','#a5d6a7',RW/2,RH/2);}
+  else{addScore(-12);showMsg('-12 ❌ Errado!','#ef9a9a');spawnBonus('-12 ❌','#ef9a9a',RW/2,RH/2);}
   pendingTrash=null;updateHUD();
   const li=getLevelIdx(cleanPct);
   if(li===3&&floatingFish.length===0)spawnFloatingFish();
@@ -500,15 +702,31 @@ function endGame(){
   el('overlay').innerHTML=`
     <h2>⏱️ Tempo esgotado!</h2>
     <div class="big-pct" style="color:${color}">${pct}%</div>
-    <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-top:-4px">do rio limpo</div>
-    <div style="font-size:32px;margin:4px 0">${emoji}</div>
-    <p style="max-width:260px">${msg}</p>
-    <p style="color:#ffe066;font-size:19px;font-weight:800;margin-top:4px">${score} pontos</p>
+    <div style="font-size:clamp(10px,2.5vw,13px);color:rgba(255,255,255,0.6);margin-top:-4px">do rio limpo</div>
+    <div style="font-size:clamp(24px,8vw,32px);margin:4px 0">${emoji}</div>
+    <p style="max-width:280px">${msg}</p>
+    <p style="color:#ffe066;font-size:clamp(15px,4.5vw,19px);font-weight:800;margin-top:4px">${score} pontos</p>
     <button onclick="location.reload()">🔄 Jogar de novo</button>
   `;
   el('overlay').classList.add('show');
 }
 
+// Handle resize — recompute canvas size and clamp game entities
+window.addEventListener('resize',()=>{
+  if(!gameRunning)return;
+  resizeCanvas();
+  // Clamp spots and animals to new bounds
+  spots.forEach(s=>{s.x=Math.min(s.x,RW-40);s.y=Math.min(s.y,RH-60);});
+  animals.forEach(a=>{a.x=Math.min(a.x,RW-40);a.y=Math.min(a.y,RH-80);});
+  floatingTrash.forEach(ft=>{ft.x=Math.min(ft.x,RW-20);ft.y=Math.min(ft.y,RH-20);});
+});
+
+// Initial canvas size setup
+resizeCanvas();
+spawnSpots();
+</script>
+</body>
+</html>
 spawnSpots();
 </script>
 </body>
